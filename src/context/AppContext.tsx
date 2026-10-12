@@ -2,13 +2,14 @@ import { createContext, useContext, useEffect, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { ReactNode } from "react";
 
-import type { Settings, Task, Session } from "../types";
+import type { Settings, Task, Session, TimerState } from "../types";
 import {
   loadSettings,
   loadTasks,
   loadSessions,
   saveToStorage,
 } from "../storage";
+import { getPhaseMs, getNextPhase } from "../lib/utils";
 
 export type AppContextValue = {
   settings: Settings;
@@ -20,6 +21,16 @@ export type AppContextValue = {
   addSession: (session: Session) => void;
 
   setSettings: Dispatch<SetStateAction<Settings>>;
+
+  timer: TimerState;
+  now: number;
+  remainingMs: number;
+  startTimer: () => void;
+  pauseTimer: () => void;
+  resetTimer: () => void;
+
+  finishPhase: () => void;
+  skipPhase: () => void;
 };
 
 export const AppContext = createContext<AppContextValue | null>(null);
@@ -32,6 +43,15 @@ function AppProvider({ children }: AppProviderProp) {
   const [settings, setSettings] = useState(() => loadSettings());
   const [tasks, setTasks] = useState(() => loadTasks());
   const [sessions, setSessions] = useState(() => loadSessions());
+  const [timer, setTimer] = useState<TimerState>({
+    status: "idle",
+    phase: "Work",
+    cycle: 1,
+    totalMs: getPhaseMs("Work", settings),
+    endAt: null,
+    remainingMs: getPhaseMs("Work", settings),
+  });
+  const [now, setNow] = useState(Date.now());
 
   useEffect(() => {
     saveToStorage("settings", settings);
@@ -44,6 +64,18 @@ function AppProvider({ children }: AppProviderProp) {
   useEffect(() => {
     saveToStorage("sessions", sessions);
   }, [sessions]);
+
+  useEffect(() => {
+    if (timer.status !== "running") {
+      return;
+    } else {
+      const intervalId = setInterval(() => {
+        setNow(Date.now());
+      }, 250);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [timer.status]);
 
   function addTask(title: string, estimate: number) {
     const newTask: Task = {
@@ -72,6 +104,93 @@ function AppProvider({ children }: AppProviderProp) {
     setSessions([...sessions, session]);
   }
 
+  function startTimer() {
+    const currentTime = Date.now();
+    setNow(currentTime);
+
+    setTimer({
+      ...timer,
+      status: "running",
+      endAt: currentTime + timer.remainingMs,
+    });
+  }
+
+  function pauseTimer() {
+    setTimer({
+      ...timer,
+      status: "paused",
+      remainingMs: remainingMs,
+      endAt: null,
+    });
+  }
+
+  function resetTimer() {
+    const totalMs = getPhaseMs(timer.phase, settings);
+
+    setTimer({
+      ...timer,
+      status: "idle",
+      totalMs,
+      remainingMs: totalMs,
+      endAt: null,
+    });
+  }
+
+  function finishPhase() {
+    const finishedAt = new Date();
+
+    if (timer.phase === "Work") {
+      const session: Session = {
+        sessionId: Date.now(),
+        taskTitle: "",
+        phase: timer.phase,
+        plannedMin: timer.totalMs / 60000,
+        actualSec: timer.totalMs / 1000,
+        completed: true,
+        startedAt: new Date(finishedAt.getTime() - timer.totalMs).toISOString(),
+        finishedAt: finishedAt.toISOString(),
+      };
+      addSession(session);
+    }
+    const next = getNextPhase(timer.phase, timer.cycle, settings);
+    const totalMs = getPhaseMs(next.phase, settings);
+    const currentTime = Date.now();
+
+    setTimer({
+      phase: next.phase,
+      cycle: next.cycle,
+      status: settings.autoStartNext ? "running" : "idle",
+      totalMs: totalMs,
+      remainingMs: totalMs,
+      endAt: settings.autoStartNext ? currentTime + totalMs : null,
+    });
+  }
+
+  function skipPhase() {
+    const next = getNextPhase(timer.phase, timer.cycle, settings);
+    const totalMs = getPhaseMs(next.phase, settings);
+
+    setTimer({
+      phase: next.phase,
+      cycle: next.cycle,
+      status: "idle",
+      totalMs: totalMs,
+      remainingMs: totalMs,
+      endAt: null,
+    });
+  }
+
+  const remainingMs =
+    timer.status === "running" && timer.endAt !== null
+      ? Math.max(0, timer.endAt - now)
+      : timer.remainingMs;
+
+  useEffect(() => {
+    if (timer.status === "running" && remainingMs === 0) {
+      finishPhase();
+    }
+  }, [timer.status, remainingMs]);
+
   const value = {
     settings,
     tasks,
@@ -81,6 +200,14 @@ function AppProvider({ children }: AppProviderProp) {
     toggleTask,
     removeTask,
     addSession,
+    timer,
+    now,
+    remainingMs,
+    startTimer,
+    pauseTimer,
+    resetTimer,
+    finishPhase,
+    skipPhase,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
