@@ -8,8 +8,9 @@ import {
   loadTasks,
   loadSessions,
   saveToStorage,
+  loadTimer,
 } from "../storage";
-import { getPhaseMs, getNextPhase } from "../lib/utils";
+import { getPhaseMs, getNextPhase, restoreTimer } from "../lib/utils";
 
 export type AppContextValue = {
   settings: Settings;
@@ -43,14 +44,22 @@ function AppProvider({ children }: AppProviderProp) {
   const [settings, setSettings] = useState(() => loadSettings());
   const [tasks, setTasks] = useState(() => loadTasks());
   const [sessions, setSessions] = useState(() => loadSessions());
-  const [timer, setTimer] = useState<TimerState>({
-    status: "idle",
-    phase: "Work",
-    cycle: 1,
-    totalMs: getPhaseMs("Work", settings),
-    endAt: null,
-    remainingMs: getPhaseMs("Work", settings),
-  });
+
+  const savedTimer = loadTimer();
+
+  const initialTimer: TimerState = savedTimer
+    ? restoreTimer(savedTimer, settings)
+    : {
+        status: "idle",
+        phase: "Work",
+        cycle: 1,
+        totalMs: getPhaseMs("Work", settings),
+        endAt: null,
+        remainingMs: getPhaseMs("Work", settings),
+      };
+
+  const [timer, setTimer] = useState<TimerState>(initialTimer);
+
   const [now, setNow] = useState(Date.now());
 
   useEffect(() => {
@@ -76,6 +85,10 @@ function AppProvider({ children }: AppProviderProp) {
       return () => clearInterval(intervalId);
     }
   }, [timer.status]);
+
+  useEffect(() => {
+    saveToStorage("timer", timer);
+  }, [timer]);
 
   function addTask(title: string, estimate: number) {
     const newTask: Task = {

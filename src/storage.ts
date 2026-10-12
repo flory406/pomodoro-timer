@@ -1,5 +1,5 @@
 import { defaultSettings, defaultTasks } from "./data";
-import type { Settings, Task, Session } from "./types";
+import type { Settings, Task, Session, TimerState } from "./types";
 
 export function saveToStorage(key: string, value: any) {
   const valueTexted = JSON.stringify(value);
@@ -66,6 +66,32 @@ export function loadSettings(): Settings {
       }
     } catch (error) {
       return defaultSettings;
+    }
+  }
+}
+
+export function loadTimer(): TimerState | null {
+  const timer = localStorage.getItem("timer");
+
+  if (timer === null || timer.length === 0) {
+    return null;
+  } else {
+    try {
+      const parsedTimer = JSON.parse(timer);
+
+      if (
+        parsedTimer !== null &&
+        typeof parsedTimer === "object" &&
+        !Array.isArray(parsedTimer) &&
+        "status" in parsedTimer &&
+        "remainingMs" in parsedTimer
+      ) {
+        return parsedTimer;
+      } else {
+        return null;
+      }
+    } catch {
+      return null;
     }
   }
 }

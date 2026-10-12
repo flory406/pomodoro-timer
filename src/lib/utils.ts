@@ -1,4 +1,4 @@
-import type { Phase, Settings } from "../types";
+import type { Phase, Settings, TimerState } from "../types";
 
 export function formatTime(ms: number) {
   const totalSeconds = Math.ceil(ms / 1000);
@@ -74,5 +74,32 @@ export function getNextPhase(
         phase: "Work",
         cycle: 1,
       };
+  }
+}
+
+export function restoreTimer(
+  saved: TimerState,
+  settings: Settings,
+): TimerState {
+  const currentTime = Date.now();
+
+  if (saved.status !== "running" || saved.endAt === null) {
+    return saved;
+  } else if (saved.endAt > currentTime) {
+    return {
+      ...saved,
+      status: "paused",
+      remainingMs: saved.endAt - currentTime,
+      endAt: null,
+    };
+  } else {
+    const totalMs = getPhaseMs(saved.phase, settings);
+    return {
+      ...saved,
+      status: "idle",
+      totalMs,
+      remainingMs: totalMs,
+      endAt: null,
+    };
   }
 }
