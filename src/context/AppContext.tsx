@@ -72,6 +72,20 @@ function AppProvider({ children }: AppProviderProp) {
   }, [settings]);
 
   useEffect(() => {
+    if (timer.status !== "idle") {
+      return;
+    }
+
+    const totalMs = getPhaseMs(timer.phase, settings);
+
+    setTimer((previousTimer) => ({
+      ...previousTimer,
+      totalMs,
+      remainingMs: totalMs,
+    }));
+  }, [settings]);
+
+  useEffect(() => {
     saveToStorage("tasks", tasks);
   }, [tasks]);
 

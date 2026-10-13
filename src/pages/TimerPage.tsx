@@ -40,9 +40,9 @@ export function TimerPage() {
       >
         <div className="card-body">
           <div className="mb-4">
-            <label htmlFor="current-task" className="form-label">
-              Поточна задача
-            </label>
+            <div className="d-flex justify-content-center align-items-center">
+              <h3 className="text-primary p-2">Поточна задача</h3>
+            </div>
 
             <select
               id="current-task"

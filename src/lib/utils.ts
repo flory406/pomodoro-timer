@@ -5,6 +5,13 @@ type TaskFormErrors = {
   estimate?: string;
 };
 
+type SettingsErrors = {
+  focusMin?: string;
+  shortBreakMin?: string;
+  longBreakMin?: string;
+  cyclesBeforeLongBreak?: string;
+};
+
 export function formatTime(ms: number) {
   const totalSeconds = Math.ceil(ms / 1000);
   const seconds = totalSeconds % 60;
@@ -125,6 +132,45 @@ export function validate(title: string, estimate: string) {
     estimateNumber > 20
   ) {
     errors.estimate = "Оцінка має бути цілим числом від 1 до 20";
+  }
+
+  return errors;
+}
+
+export function validateSettings(settings: Settings) {
+  const errors: SettingsErrors = {};
+
+  if (
+    !Number.isInteger(settings.focusMin) ||
+    settings.focusMin < 1 ||
+    settings.focusMin > 120
+  ) {
+    errors.focusMin = "Робоча фаза має бути цілим числом від 1 до 120";
+  }
+
+  if (
+    !Number.isInteger(settings.shortBreakMin) ||
+    settings.shortBreakMin < 1 ||
+    settings.shortBreakMin > 60
+  ) {
+    errors.shortBreakMin = "Коротка перерва має бути цілим числом від 1 до 60";
+  }
+
+  if (
+    !Number.isInteger(settings.longBreakMin) ||
+    settings.longBreakMin < 1 ||
+    settings.longBreakMin > 60
+  ) {
+    errors.longBreakMin = "Довга перерва має бути цілим числом від 1 до 60";
+  }
+
+  if (
+    !Number.isInteger(settings.cyclesBeforeLongBreak) ||
+    settings.cyclesBeforeLongBreak < 2 ||
+    settings.cyclesBeforeLongBreak > 8
+  ) {
+    errors.cyclesBeforeLongBreak =
+      "Кількість циклів має бути цілим числом від 2 до 8";
   }
 
   return errors;

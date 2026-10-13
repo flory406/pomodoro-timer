@@ -16,14 +16,14 @@ export function Layout() {
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center mt-3">
-      <nav className="navbar navbar-expand d-flex gap-2 p-2 mt-3 rounded-pill bg-body-tertiary shadow-sm">
+      <nav className="navbar navbar-expand d-flex gap-2 p-2 mt-3 rounded-pill app-nav">
         <NavLink
           to="/"
           end
           className={({ isActive }) =>
             isActive
-              ? "btn btn-primary rounded-pill px-3"
-              : "btn btn-link text-body text-decoration-none rounded-pill px-3"
+              ? "app-nav-link app-nav-link-active"
+              : "app-nav-link"
           }
         >
           Timer
@@ -33,8 +33,8 @@ export function Layout() {
           to="/tasks"
           className={({ isActive }) =>
             isActive
-              ? "btn btn-primary rounded-pill px-3"
-              : "btn btn-link text-body text-decoration-none rounded-pill px-3"
+              ? "app-nav-link app-nav-link-active"
+              : "app-nav-link"
           }
         >
           Tasks
@@ -44,8 +44,8 @@ export function Layout() {
           to="/stats"
           className={({ isActive }) =>
             isActive
-              ? "btn btn-primary rounded-pill px-3"
-              : "btn btn-link text-body text-decoration-none rounded-pill px-3"
+              ? "app-nav-link app-nav-link-active"
+              : "app-nav-link"
           }
         >
           Stats
@@ -55,8 +55,8 @@ export function Layout() {
           to="/settings"
           className={({ isActive }) =>
             isActive
-              ? "btn btn-primary rounded-pill px-3"
-              : "btn btn-link text-body text-decoration-none rounded-pill px-3"
+              ? "app-nav-link app-nav-link-active"
+              : "app-nav-link"
           }
         >
           Settings
