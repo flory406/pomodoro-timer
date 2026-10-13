@@ -1,5 +1,10 @@
 import type { Phase, Settings, TimerState } from "../types";
 
+type TaskFormErrors = {
+  title?: string;
+  estimate?: string;
+};
+
 export function formatTime(ms: number) {
   const totalSeconds = Math.ceil(ms / 1000);
   const seconds = totalSeconds % 60;
@@ -102,4 +107,25 @@ export function restoreTimer(
       endAt: null,
     };
   }
+}
+
+export function validate(title: string, estimate: string) {
+  const errors: TaskFormErrors = {};
+
+  const trimmedTitle = title.trim();
+  const estimateNumber = Number(estimate);
+
+  if (trimmedTitle.length < 2 || trimmedTitle.length > 80) {
+    errors.title = "Назва має містити від 2 до 80 символів";
+  }
+
+  if (
+    !Number.isInteger(estimateNumber) ||
+    estimateNumber < 1 ||
+    estimateNumber > 20
+  ) {
+    errors.estimate = "Оцінка має бути цілим числом від 1 до 20";
+  }
+
+  return errors;
 }

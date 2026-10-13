@@ -16,12 +16,14 @@ export function Layout() {
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center mt-3">
-      <nav className="navbar d-flex gap-3">
+      <nav className="navbar navbar-expand d-flex gap-2 p-2 mt-3 rounded-pill bg-body-tertiary shadow-sm">
         <NavLink
           to="/"
           end
           className={({ isActive }) =>
-            isActive ? "btn btn-dark" : "btn btn-outline-dark"
+            isActive
+              ? "btn btn-primary rounded-pill px-3"
+              : "btn btn-link text-body text-decoration-none rounded-pill px-3"
           }
         >
           Timer
@@ -30,7 +32,9 @@ export function Layout() {
         <NavLink
           to="/tasks"
           className={({ isActive }) =>
-            isActive ? "btn btn-dark" : "btn btn-outline-dark"
+            isActive
+              ? "btn btn-primary rounded-pill px-3"
+              : "btn btn-link text-body text-decoration-none rounded-pill px-3"
           }
         >
           Tasks
@@ -39,7 +43,9 @@ export function Layout() {
         <NavLink
           to="/stats"
           className={({ isActive }) =>
-            isActive ? "btn btn-dark" : "btn btn-outline-dark"
+            isActive
+              ? "btn btn-primary rounded-pill px-3"
+              : "btn btn-link text-body text-decoration-none rounded-pill px-3"
           }
         >
           Stats
@@ -48,7 +54,9 @@ export function Layout() {
         <NavLink
           to="/settings"
           className={({ isActive }) =>
-            isActive ? "btn btn-dark" : "btn btn-outline-dark"
+            isActive
+              ? "btn btn-primary rounded-pill px-3"
+              : "btn btn-link text-body text-decoration-none rounded-pill px-3"
           }
         >
           Settings

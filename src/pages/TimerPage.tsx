@@ -15,8 +15,24 @@ export function TimerPage() {
   } = useApp();
 
   return (
-    <div className="d-flex justify-content-center align-items-center flex-column gap-3 mt-3">
-      <div className="card p-3">
+    <div
+      className="d-flex justify-content-center align-items-center flex-column gap-3"
+      style={{
+        minHeight: "calc(100vh - 120px)",
+        background:
+          "radial-gradient(circle at top, rgba(13, 110, 253, 0.16), transparent 52%), linear-gradient(135deg, rgba(13, 110, 253, 0.04), transparent 60%)",
+        borderRadius: "2rem",
+        padding: "2rem 1rem",
+      }}
+    >
+      <div
+        className="card app-hover-card border-0 shadow-lg rounded-4 w-100"
+        style={{
+          maxWidth: "560px",
+          backgroundColor: "rgba(var(--bs-body-bg-rgb), 0.88)",
+          backdropFilter: "blur(12px)",
+        }}
+      >
         <div className="card-body">
           <div className="d-flex justify-content-center align-items-center">
             <TimerDisplay
@@ -27,7 +43,7 @@ export function TimerPage() {
             />
           </div>
 
-          <div className="d-flex justify-content-center align-items-center gap-3 mt-3">
+          <div className="d-flex justify-content-center align-items-center gap-3 mt-2">
             <TimerControls
               status={timer.status}
               onStart={startTimer}

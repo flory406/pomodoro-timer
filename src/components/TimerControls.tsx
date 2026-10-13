@@ -25,16 +25,16 @@ export function TimerControls({
   const buttonAction = status === "running" ? onPause : onStart;
 
   return (
-    <div className="d-flex justify-content-center align-items-center gap-3">
-      <button className="btn btn-primary" onClick={buttonAction}>
+    <div className="d-flex justify-content-center align-items-center flex-wrap gap-2">
+      <button className="btn btn-primary rounded-pill px-4" onClick={buttonAction}>
         {buttonText}
       </button>
 
-      <button className="btn btn-secondary" onClick={onReset}>
+      <button className="btn btn-outline-secondary rounded-pill px-4" onClick={onReset}>
         Скинути
       </button>
 
-      <button className="btn btn-outline-danger" onClick={onSkip}>
+      <button className="btn btn-outline-danger rounded-pill px-4" onClick={onSkip}>
         Пропустити фазу
       </button>
     </div>

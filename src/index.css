@@ -1,0 +1,22 @@
+.app-hover-card {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.app-hover-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 1rem 2.5rem rgba(13, 110, 253, 0.2) !important;
+  border-color: rgba(13, 110, 253, 0.18) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-hover-card {
+    transition: none;
+  }
+
+  .app-hover-card:hover {
+    transform: none;
+  }
+}
