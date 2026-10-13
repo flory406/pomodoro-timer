@@ -12,7 +12,12 @@ export function TimerPage() {
     timer,
     settings,
     resetTimer,
+    tasks,
+    currentTaskId,
+    setCurrentTaskId,
   } = useApp();
+
+  const activeTasks = tasks.filter((task) => !task.isDone);
 
   return (
     <div
@@ -34,6 +39,32 @@ export function TimerPage() {
         }}
       >
         <div className="card-body">
+          <div className="mb-4">
+            <label htmlFor="current-task" className="form-label">
+              Поточна задача
+            </label>
+
+            <select
+              id="current-task"
+              className="form-select"
+              value={currentTaskId ?? ""}
+              onChange={(ev) =>
+                setCurrentTaskId(
+                  ev.target.value === "" ? null : Number(ev.target.value),
+                )
+              }
+              disabled={timer.status === "running" && timer.phase === "Work"}
+            >
+              <option value="">Без задачі</option>
+
+              {activeTasks.map((task) => (
+                <option key={task.id} value={task.id}>
+                  {task.title}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="d-flex justify-content-center align-items-center">
             <TimerDisplay
               remainingMs={remainingMs}

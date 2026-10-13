@@ -5,6 +5,7 @@ import { ConfirmDialog } from "../components/ConfirmDialog";
 import { EmptyState } from "../components/EmptyState";
 
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export function TasksPage() {
   const { tasks, addTask, toggleTask, removeTask } = useApp();
@@ -19,6 +20,17 @@ export function TasksPage() {
     removeTask(deleteTask);
     setDeleteTask(null);
   };
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const doneFilter = searchParams.get("done");
+
+  let filteredTasks = tasks;
+
+  if (doneFilter === "true") {
+    filteredTasks = filteredTasks.filter((task) => task.isDone);
+  } else if (doneFilter === "false") {
+    filteredTasks = filteredTasks.filter((task) => !task.isDone);
+  }
 
   return (
     <div
@@ -38,6 +50,39 @@ export function TasksPage() {
         <p className="text-secondary mb-0">Задач: {tasks.length}</p>
       </div>
 
+      <div className="d-flex justify-content-center align-items-center gap-3 mt-3">
+        <button
+          className={
+            doneFilter === null ? "btn btn-primary" : "btn btn-outline-primary"
+          }
+          onClick={() => setSearchParams({})}
+        >
+          Усі
+        </button>
+
+        <button
+          className={
+            doneFilter === "false"
+              ? "btn btn-primary"
+              : "btn btn-outline-primary"
+          }
+          onClick={() => setSearchParams({ done: "false" })}
+        >
+          Активні
+        </button>
+
+        <button
+          className={
+            doneFilter === "true"
+              ? "btn btn-primary"
+              : "btn btn-outline-primary"
+          }
+          onClick={() => setSearchParams({ done: "true" })}
+        >
+          Виконані
+        </button>
+      </div>
+
       <div>
         <ConfirmDialog
           open={deleteTask !== null}
@@ -53,8 +98,15 @@ export function TasksPage() {
             title="Немає задач"
             hint="Додай першу задачу у формі вище"
           />
+        ) : filteredTasks.length === 0 ? (
+          <EmptyState
+            title="За цим фільтром нічого немає"
+            hint="Спробуй вибрати інший фільтр"
+            buttonText="Скинути фільтр"
+            onClick={() => setSearchParams({})}
+          />
         ) : (
-          tasks.map((task) => (
+          filteredTasks.map((task) => (
             <div key={task.id} className="col-12 col-md-6 col-lg-4">
               <TaskItem
                 task={task}

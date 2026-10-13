@@ -18,6 +18,7 @@ export type AppContextValue = {
   sessions: Session[];
   addTask: (title: string, estimate: number) => void;
   toggleTask: (id: number) => void;
+  bumpPomodoro: (id: number) => void;
   removeTask: (id: number) => void;
   addSession: (session: Session) => void;
 
@@ -32,6 +33,9 @@ export type AppContextValue = {
 
   finishPhase: () => void;
   skipPhase: () => void;
+
+  currentTaskId: number | null;
+  setCurrentTaskId: (id: number | null) => void;
 };
 
 export const AppContext = createContext<AppContextValue | null>(null);
@@ -44,6 +48,7 @@ function AppProvider({ children }: AppProviderProp) {
   const [settings, setSettings] = useState(() => loadSettings());
   const [tasks, setTasks] = useState(() => loadTasks());
   const [sessions, setSessions] = useState(() => loadSessions());
+  const [currentTaskId, setCurrentTaskId] = useState<number | null>(null);
 
   const savedTimer = loadTimer();
 
@@ -109,6 +114,16 @@ function AppProvider({ children }: AppProviderProp) {
     );
   }
 
+  function bumpPomodoro(id: number) {
+    setTasks(
+      tasks.map((task) =>
+        task.id === id
+          ? { ...task, donePomodoros: task.donePomodoros + 1 }
+          : task,
+      ),
+    );
+  }
+
   function removeTask(id: number) {
     setTasks(tasks.filter((task) => task.id !== id));
   }
@@ -153,17 +168,37 @@ function AppProvider({ children }: AppProviderProp) {
     const finishedAt = new Date();
 
     if (timer.phase === "Work") {
-      const session: Session = {
-        sessionId: Date.now(),
-        taskTitle: "",
-        phase: timer.phase,
-        plannedMin: timer.totalMs / 60000,
-        actualSec: timer.totalMs / 1000,
-        completed: true,
-        startedAt: new Date(finishedAt.getTime() - timer.totalMs).toISOString(),
-        finishedAt: finishedAt.toISOString(),
-      };
-      addSession(session);
+      const currentTask = tasks.find((task) => task.id === currentTaskId);
+      if (currentTask) {
+        bumpPomodoro(currentTask.id);
+        const session: Session = {
+          sessionId: Date.now(),
+          taskTitle: currentTask.title,
+          phase: timer.phase,
+          plannedMin: timer.totalMs / 60000,
+          actualSec: timer.totalMs / 1000,
+          completed: true,
+          startedAt: new Date(
+            finishedAt.getTime() - timer.totalMs,
+          ).toISOString(),
+          finishedAt: finishedAt.toISOString(),
+        };
+        addSession(session);
+      } else {
+        const session: Session = {
+          sessionId: Date.now(),
+          taskTitle: "Без задачі",
+          phase: timer.phase,
+          plannedMin: timer.totalMs / 60000,
+          actualSec: timer.totalMs / 1000,
+          completed: true,
+          startedAt: new Date(
+            finishedAt.getTime() - timer.totalMs,
+          ).toISOString(),
+          finishedAt: finishedAt.toISOString(),
+        };
+        addSession(session);
+      }
     }
     const next = getNextPhase(timer.phase, timer.cycle, settings);
     const totalMs = getPhaseMs(next.phase, settings);
@@ -211,6 +246,7 @@ function AppProvider({ children }: AppProviderProp) {
     setSettings,
     addTask,
     toggleTask,
+    bumpPomodoro,
     removeTask,
     addSession,
     timer,
@@ -221,6 +257,8 @@ function AppProvider({ children }: AppProviderProp) {
     resetTimer,
     finishPhase,
     skipPhase,
+    currentTaskId,
+    setCurrentTaskId,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
