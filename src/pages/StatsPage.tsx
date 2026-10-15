@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { BarChart } from "../components/BarChart";
+import { ConfirmDialog } from "../components/ConfirmDialog";
 import { EmptyState } from "../components/EmptyState";
 import { useApp } from "../context/AppContext";
 import {
@@ -12,6 +14,7 @@ import {
 
 export function StatsPage() {
   const { sessions } = useApp();
+  const [showClear, setShowClear] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const range = searchParams.get("range");
   const isMonth = range === "month";
@@ -23,12 +26,33 @@ export function StatsPage() {
       days.includes(dayKey(new Date(session.finishedAt))),
   );
 
+  const clearStatistics = () => {
+    localStorage.removeItem("sessions");
+    window.location.reload();
+  };
+
   if (periodSessions.length === 0) {
     return (
       <div className="container py-5">
         <EmptyState
           title="Статистика порожня"
           hint="Завершені робочі сесії за цей період з'являться тут"
+        />
+        <div className="text-end mt-4">
+          <button
+            type="button"
+            className="btn btn-outline-danger btn-sm"
+            onClick={() => setShowClear(true)}
+          >
+            Очистити статистику
+          </button>
+        </div>
+        <ConfirmDialog
+          open={showClear}
+          message="Усю статистику буде видалено. Продовжити?"
+          onCancel={() => setShowClear(false)}
+          onConfirm={clearStatistics}
+          confirmText="Очистити"
         />
       </div>
     );
@@ -116,6 +140,24 @@ export function StatsPage() {
           </div>
         </div>
       </div>
+
+      <div className="text-end mt-4">
+        <button
+          type="button"
+          className="btn btn-outline-danger btn-sm"
+          onClick={() => setShowClear(true)}
+        >
+          Очистити статистику
+        </button>
+      </div>
+
+      <ConfirmDialog
+        open={showClear}
+        message="Усю статистику буде видалено. Продовжити?"
+        onCancel={() => setShowClear(false)}
+        onConfirm={clearStatistics}
+        confirmText="Очистити"
+      />
     </div>
   );
 }
