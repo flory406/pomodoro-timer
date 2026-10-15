@@ -38,22 +38,6 @@ export function StatsPage() {
           title="Статистика порожня"
           hint="Завершені робочі сесії за цей період з'являться тут"
         />
-        <div className="text-end mt-4">
-          <button
-            type="button"
-            className="btn btn-outline-danger btn-sm"
-            onClick={() => setShowClear(true)}
-          >
-            Очистити статистику
-          </button>
-        </div>
-        <ConfirmDialog
-          open={showClear}
-          message="Усю статистику буде видалено. Продовжити?"
-          onCancel={() => setShowClear(false)}
-          onConfirm={clearStatistics}
-          confirmText="Очистити"
-        />
       </div>
     );
   }
