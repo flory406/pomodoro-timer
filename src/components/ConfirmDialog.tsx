@@ -3,6 +3,7 @@ type ConfirmDialogProps = {
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
+  confirmText?: string;
 };
 
 export function ConfirmDialog({
@@ -10,6 +11,7 @@ export function ConfirmDialog({
   message,
   onConfirm,
   onCancel,
+  confirmText = "Видалити",
 }: ConfirmDialogProps) {
   if (open === false) {
     return null;
@@ -30,7 +32,7 @@ export function ConfirmDialog({
             </button>
 
             <button onClick={onConfirm} className="btn btn-outline-danger">
-              Видалити
+              {confirmText}
             </button>
           </div>
         </div>

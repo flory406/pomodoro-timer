@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useApp } from "../context/AppContext";
 import type { Settings } from "../types";
 import { validateSettings } from "../lib/utils";
+import { ConfirmDialog } from "../components/ConfirmDialog";
 
 export function SettingsPage() {
   const { settings, setSettings } = useApp();
@@ -15,6 +16,7 @@ export function SettingsPage() {
   }>({});
 
   const [saved, setSaved] = useState(false);
+  const [showReset, setShowReset] = useState(false);
 
   const handleSave = () => {
     const validationErrors = validateSettings(draft);
@@ -28,6 +30,14 @@ export function SettingsPage() {
 
     setSettings(draft);
     setSaved(true);
+  };
+
+  const handleReset = () => {
+    ["settings", "tasks", "sessions", "timer"].forEach((key) => {
+      localStorage.removeItem(key);
+    });
+
+    window.location.reload();
   };
 
   return (
@@ -159,7 +169,25 @@ export function SettingsPage() {
             Зберегти
           </button>
         </div>
+
+        <div className="d-flex justify-content-center align-items-center mt-3">
+          <button
+            type="button"
+            className="btn btn-outline-danger mt-3"
+            onClick={() => setShowReset(true)}
+          >
+            Скинути дані
+          </button>
+        </div>
       </div>
+
+      <ConfirmDialog
+        open={showReset}
+        message="Усі задачі, сесії й налаштування буде скинуто до початкових. Продовжити?"
+        onCancel={() => setShowReset(false)}
+        onConfirm={handleReset}
+        confirmText="Підтвердити"
+      />
     </div>
   );
 }

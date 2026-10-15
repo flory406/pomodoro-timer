@@ -63,8 +63,8 @@ export function TaskDetailPage() {
 
         {taskSessions.length === 0 ? (
           <EmptyState
-            title="Сесій ще немає"
-            hint="Завершені робочі сесії цієї задачі з'являться тут"
+            title="Статистика відсутня"
+            hint="Статистики по цій задачі на даний момент немає"
           />
         ) : (
           <div className="list-group">

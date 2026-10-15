@@ -24,9 +24,6 @@ export function TimerPage() {
       className="d-flex justify-content-center align-items-center flex-column gap-3"
       style={{
         minHeight: "calc(100vh - 120px)",
-        background:
-          "radial-gradient(circle at top, rgba(13, 110, 253, 0.16), transparent 52%), linear-gradient(135deg, rgba(13, 110, 253, 0.04), transparent 60%)",
-        borderRadius: "2rem",
         padding: "2rem 1rem",
       }}
     >

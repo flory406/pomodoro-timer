@@ -1,3 +1,25 @@
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(
+      circle at 30% 42%,
+      rgba(13, 110, 253, 0.3),
+      transparent 24rem
+    ),
+    radial-gradient(
+      circle at 72% 45%,
+      rgba(124, 58, 237, 0.22),
+      transparent 25rem
+    ),
+    linear-gradient(135deg, #f4f7ff 0%, #f9f8ff 52%, #f5f9ff 100%);
+  background-attachment: fixed;
+}
+
 .app-nav {
   background: rgba(var(--bs-body-bg-rgb), 0.42);
   border: 1px solid rgba(var(--bs-secondary-rgb), 0.12);

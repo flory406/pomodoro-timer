@@ -1,4 +1,4 @@
-import type { Phase, Settings, TimerState } from "../types";
+import type { Phase, Session, Settings, TimerState } from "../types";
 
 type TaskFormErrors = {
   title?: string;
@@ -174,4 +174,73 @@ export function validateSettings(settings: Settings) {
   }
 
   return errors;
+}
+
+export function dayKey(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+export function getPeriodDays(days: number) {
+  const today = new Date();
+
+  return Array.from({ length: days }, (_, index) => {
+    const date = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() - index,
+    );
+
+    return dayKey(date);
+  }).reverse();
+}
+
+export function getSecondsByDay(sessions: Session[], days: string[]) {
+  return days.map((day) => {
+    const sec = sessions
+      .filter(
+        (session) =>
+          session.phase === "Work" &&
+          session.completed &&
+          dayKey(new Date(session.finishedAt)) === day,
+      )
+      .reduce((total, session) => total + session.actualSec, 0);
+
+    return { day, sec };
+  });
+}
+
+export function getTopTasks(sessions: Session[], days: string[]) {
+  const secondsByTask: Record<string, number> = {};
+
+  sessions
+    .filter(
+      (session) =>
+        session.phase === "Work" &&
+        session.completed &&
+        days.includes(dayKey(new Date(session.finishedAt))),
+    )
+    .forEach((session) => {
+      secondsByTask[session.taskTitle] =
+        (secondsByTask[session.taskTitle] ?? 0) + session.actualSec;
+    });
+
+  return Object.entries(secondsByTask)
+    .map(([taskTitle, sec]) => ({ taskTitle, sec }))
+    .sort((a, b) => b.sec - a.sec)
+    .slice(0, 5);
+}
+
+export function formatDuration(sec: number) {
+  const hours = Math.floor(sec / 3600);
+  const minutes = Math.floor((sec % 3600) / 60);
+
+  if (hours === 0) {
+    return `${minutes} хв`;
+  }
+
+  return `${hours} год ${minutes} хв`;
 }
