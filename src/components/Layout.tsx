@@ -4,7 +4,7 @@ import { useApp } from "../context/AppContext";
 import { formatTime, getPhaseName } from "../lib/utils";
 
 export function Layout() {
-  const { remainingMs, timer } = useApp();
+  const { remainingMs, timer, notice, setNotice } = useApp();
 
   useEffect(() => {
     if (timer.status !== "idle") {
@@ -13,6 +13,18 @@ export function Layout() {
       document.title = "Помодоро";
     }
   }, [remainingMs, timer.phase, timer.status]);
+
+  useEffect(() => {
+    if (notice === null) {
+      return;
+    }
+
+    const timeoutId = setTimeout(() => {
+      setNotice(null);
+    }, 4000);
+
+    return () => clearTimeout(timeoutId);
+  }, [notice, setNotice]);
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center mt-3">
@@ -62,6 +74,12 @@ export function Layout() {
           Settings
         </NavLink>
       </nav>
+
+      {notice !== null && (
+        <div className="alert alert-success mt-3 mb-0" role="alert">
+          {notice}
+        </div>
+      )}
 
       <main className="container">
         <Outlet />

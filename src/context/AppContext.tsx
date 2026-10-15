@@ -10,7 +10,12 @@ import {
   saveToStorage,
   loadTimer,
 } from "../storage";
-import { getPhaseMs, getNextPhase, restoreTimer } from "../lib/utils";
+import {
+  getPhaseMs,
+  getNextPhase,
+  getPhaseName,
+  restoreTimer,
+} from "../lib/utils";
 
 export type AppContextValue = {
   settings: Settings;
@@ -36,6 +41,8 @@ export type AppContextValue = {
 
   currentTaskId: number | null;
   setCurrentTaskId: (id: number | null) => void;
+  notice: string | null;
+  setNotice: (notice: string | null) => void;
 };
 
 export const AppContext = createContext<AppContextValue | null>(null);
@@ -49,6 +56,7 @@ function AppProvider({ children }: AppProviderProp) {
   const [tasks, setTasks] = useState(() => loadTasks());
   const [sessions, setSessions] = useState(() => loadSessions());
   const [currentTaskId, setCurrentTaskId] = useState<number | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   const savedTimer = loadTimer();
 
@@ -180,6 +188,11 @@ function AppProvider({ children }: AppProviderProp) {
 
   function finishPhase() {
     const finishedAt = new Date();
+    setNotice(`Фазу «${getPhaseName(timer.phase)}» завершено`);
+
+    if (settings.soundOn) {
+      new Audio("/beep.mp3").play().catch(() => {});
+    }
 
     if (timer.phase === "Work") {
       const currentTask = tasks.find((task) => task.id === currentTaskId);
@@ -273,6 +286,8 @@ function AppProvider({ children }: AppProviderProp) {
     skipPhase,
     currentTaskId,
     setCurrentTaskId,
+    notice,
+    setNotice,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
