@@ -204,7 +204,7 @@ export function getSecondsByDay(sessions: Session[], days: string[]) {
       .filter(
         (session) =>
           session.phase === "Work" &&
-          session.completed &&
+          session.actualSec > 0 &&
           dayKey(new Date(session.finishedAt)) === day,
       )
       .reduce((total, session) => total + session.actualSec, 0);
@@ -220,7 +220,7 @@ export function getTopTasks(sessions: Session[], days: string[]) {
     .filter(
       (session) =>
         session.phase === "Work" &&
-        session.completed &&
+        session.actualSec > 0 &&
         days.includes(dayKey(new Date(session.finishedAt))),
     )
     .forEach((session) => {

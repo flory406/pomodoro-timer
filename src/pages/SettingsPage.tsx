@@ -18,6 +18,26 @@ export function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [showReset, setShowReset] = useState(false);
 
+  const handleNumberChange = (
+    key:
+      | "focusMin"
+      | "shortBreakMin"
+      | "longBreakMin"
+      | "cyclesBeforeLongBreak",
+    value: string,
+  ) => {
+    const numberValue = Number(value);
+
+    if (!Number.isFinite(numberValue) || numberValue < 1) {
+      return;
+    }
+
+    setDraft({
+      ...draft,
+      [key]: numberValue,
+    });
+  };
+
   const handleSave = () => {
     const validationErrors = validateSettings(draft);
 
@@ -53,13 +73,12 @@ export function SettingsPage() {
           <input
             id="focusMin"
             type="number"
+            min={1}
+            step={1}
             className={`form-control ${errors.focusMin ? "is-invalid" : ""}`}
             value={draft.focusMin}
             onChange={(event) =>
-              setDraft({
-                ...draft,
-                focusMin: Number(event.target.value),
-              })
+              handleNumberChange("focusMin", event.target.value)
             }
           />
           {errors.focusMin && (
@@ -75,13 +94,12 @@ export function SettingsPage() {
           <input
             id="shortBreakMin"
             type="number"
+            min={1}
+            step={1}
             className={`form-control ${errors.shortBreakMin ? "is-invalid" : ""}`}
             value={draft.shortBreakMin}
             onChange={(event) =>
-              setDraft({
-                ...draft,
-                shortBreakMin: Number(event.target.value),
-              })
+              handleNumberChange("shortBreakMin", event.target.value)
             }
           />
           {errors.shortBreakMin && (
@@ -97,13 +115,12 @@ export function SettingsPage() {
           <input
             id="longBreakMin"
             type="number"
+            min={1}
+            step={1}
             className={`form-control ${errors.longBreakMin ? "is-invalid" : ""}`}
             value={draft.longBreakMin}
             onChange={(event) =>
-              setDraft({
-                ...draft,
-                longBreakMin: Number(event.target.value),
-              })
+              handleNumberChange("longBreakMin", event.target.value)
             }
           />
           {errors.longBreakMin && (
@@ -119,13 +136,15 @@ export function SettingsPage() {
           <input
             id="cyclesBeforeLongBreak"
             type="number"
+            min={1}
+            step={1}
             className={`form-control ${errors.cyclesBeforeLongBreak ? "is-invalid" : ""}`}
             value={draft.cyclesBeforeLongBreak}
             onChange={(event) =>
-              setDraft({
-                ...draft,
-                cyclesBeforeLongBreak: Number(event.target.value),
-              })
+              handleNumberChange(
+                "cyclesBeforeLongBreak",
+                event.target.value,
+              )
             }
           />
           {errors.cyclesBeforeLongBreak && (

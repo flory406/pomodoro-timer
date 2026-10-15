@@ -19,7 +19,7 @@ export function StatsPage() {
   const periodSessions = sessions.filter(
     (session) =>
       session.phase === "Work" &&
-      session.completed &&
+      session.actualSec > 0 &&
       days.includes(dayKey(new Date(session.finishedAt))),
   );
 

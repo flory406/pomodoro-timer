@@ -154,6 +154,32 @@ function AppProvider({ children }: AppProviderProp) {
     setSessions([...sessions, session]);
   }
 
+  function recordPhaseSession(
+    finishedAt: Date,
+    actualMs: number,
+    completed: boolean,
+  ) {
+    if (actualMs <= 0) {
+      return;
+    }
+
+    const currentTask = tasks.find((task) => task.id === currentTaskId);
+    const actualSec = actualMs / 1000;
+    const session: Session = {
+      sessionId: Date.now(),
+      taskTitle:
+        timer.phase === "Work" ? (currentTask?.title ?? "Без задачі") : "Перерва",
+      phase: timer.phase,
+      plannedMin: timer.totalMs / 60000,
+      actualSec,
+      completed,
+      startedAt: new Date(finishedAt.getTime() - actualMs).toISOString(),
+      finishedAt: finishedAt.toISOString(),
+    };
+
+    addSession(session);
+  }
+
   function startTimer() {
     const currentTime = Date.now();
     setNow(currentTime);
@@ -194,35 +220,10 @@ function AppProvider({ children }: AppProviderProp) {
       const currentTask = tasks.find((task) => task.id === currentTaskId);
       if (currentTask) {
         bumpPomodoro(currentTask.id);
-        const session: Session = {
-          sessionId: Date.now(),
-          taskTitle: currentTask.title,
-          phase: timer.phase,
-          plannedMin: timer.totalMs / 60000,
-          actualSec: timer.totalMs / 1000,
-          completed: true,
-          startedAt: new Date(
-            finishedAt.getTime() - timer.totalMs,
-          ).toISOString(),
-          finishedAt: finishedAt.toISOString(),
-        };
-        addSession(session);
-      } else {
-        const session: Session = {
-          sessionId: Date.now(),
-          taskTitle: "Без задачі",
-          phase: timer.phase,
-          plannedMin: timer.totalMs / 60000,
-          actualSec: timer.totalMs / 1000,
-          completed: true,
-          startedAt: new Date(
-            finishedAt.getTime() - timer.totalMs,
-          ).toISOString(),
-          finishedAt: finishedAt.toISOString(),
-        };
-        addSession(session);
       }
     }
+    recordPhaseSession(finishedAt, timer.totalMs, true);
+
     const next = getNextPhase(timer.phase, timer.cycle, settings);
     const totalMs = getPhaseMs(next.phase, settings);
     const currentTime = Date.now();
@@ -238,6 +239,10 @@ function AppProvider({ children }: AppProviderProp) {
   }
 
   function skipPhase() {
+    const finishedAt = new Date();
+    const actualMs = timer.totalMs - remainingMs;
+    recordPhaseSession(finishedAt, actualMs, false);
+
     const next = getNextPhase(timer.phase, timer.cycle, settings);
     const totalMs = getPhaseMs(next.phase, settings);
 

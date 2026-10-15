@@ -62,6 +62,70 @@ body {
   border-color: rgba(13, 110, 253, 0.18) !important;
 }
 
+.not-found-page {
+  isolation: isolate;
+  min-height: 65vh;
+  overflow: hidden;
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 4rem 1rem;
+}
+
+.not-found-card {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 38rem);
+  padding: 3.5rem 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 2rem;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 1.5rem 4rem rgba(58, 76, 135, 0.16);
+  backdrop-filter: blur(16px);
+}
+
+.not-found-eyebrow {
+  color: var(--bs-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.not-found-code {
+  background: linear-gradient(135deg, #0d6efd, #7c3aed);
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(6rem, 22vw, 10rem);
+  font-weight: 800;
+  letter-spacing: -0.08em;
+  line-height: 0.95;
+  margin-right: 0.08em;
+}
+
+.not-found-glow {
+  border-radius: 50%;
+  filter: blur(2px);
+  height: 13rem;
+  opacity: 0.65;
+  position: absolute;
+  width: 13rem;
+  z-index: -1;
+}
+
+.not-found-glow-left {
+  background: rgba(13, 110, 253, 0.2);
+  left: 2%;
+  top: 18%;
+}
+
+.not-found-glow-right {
+  background: rgba(124, 58, 237, 0.17);
+  bottom: 12%;
+  right: 3%;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .app-hover-card {
     transition: none;
