@@ -144,25 +144,6 @@ export function SettingsPage() {
           </label>
         </div>
 
-        <div className="form-check mb-3">
-          <input
-            id="soundOn"
-            type="checkbox"
-            className="form-check-input"
-            checked={draft.soundOn}
-            onChange={(event) =>
-              setDraft({
-                ...draft,
-                soundOn: event.target.checked,
-              })
-            }
-          />
-
-          <label htmlFor="soundOn" className="form-check-label">
-            Увімкнути звук
-          </label>
-        </div>
-
         {saved && (
           <div className="alert alert-success mt-3" role="alert">
             Збережено

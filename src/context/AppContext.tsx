@@ -190,10 +190,6 @@ function AppProvider({ children }: AppProviderProp) {
     const finishedAt = new Date();
     setNotice(`Фазу «${getPhaseName(timer.phase)}» завершено`);
 
-    if (settings.soundOn) {
-      new Audio("/beep.mp3").play().catch(() => {});
-    }
-
     if (timer.phase === "Work") {
       const currentTask = tasks.find((task) => task.id === currentTaskId);
       if (currentTask) {

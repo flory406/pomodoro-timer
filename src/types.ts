@@ -8,7 +8,6 @@ export interface Settings {
   longBreakMin: number;
   cyclesBeforeLongBreak: number;
   autoStartNext: boolean;
-  soundOn: boolean;
 }
 
 export interface Task {

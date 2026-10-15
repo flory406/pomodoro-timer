@@ -6,7 +6,6 @@ export const defaultSettings: Settings = {
   longBreakMin: 15,
   cyclesBeforeLongBreak: 4,
   autoStartNext: true,
-  soundOn: true,
 };
 
 export const defaultTasks: Task[] = [
