@@ -1,75 +1,74 @@
-# React + TypeScript + Vite
+# Pomodoro Timer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Вебзастосунок Pomodoro Timer на React і TypeScript для планування робочих
+сесій, перерв та відстеження статистики.
 
-Currently, two official plugins are available:
+## Можливості
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- таймер робочої фази, короткої та довгої перерви;
+- автоматичний перехід до наступної фази;
+- налаштування тривалості фаз і кількості циклів;
+- створення, редагування статусу та видалення задач;
+- вибір поточної задачі для робочої сесії;
+- збереження задач, налаштувань, таймера та сесій у `localStorage`;
+- статистика за тиждень або місяць;
+- графік часу по днях і топ задач;
+- очищення статистики з підтвердженням;
+- сторінка деталей задачі та власна сторінка 404;
+- адаптивний інтерфейс на Bootstrap.
 
-## React Compiler
+## Технології
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19
+- TypeScript
+- Vite
+- React Router
+- Bootstrap 5
 
-## Expanding the ESLint configuration
+## Запуск локально
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Потрібен Node.js та npm.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Після запуску відкрий адресу, яку покаже Vite, зазвичай:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+http://localhost:5173
 ```
+
+## Доступні команди
+
+```bash
+npm run dev      # запуск development-сервера
+npm run build    # перевірка TypeScript і production-збірка
+npm run lint     # перевірка ESLint
+npm run preview  # перегляд production-збірки
+```
+
+## Основні сторінки
+
+| URL | Опис |
+| --- | --- |
+| `/` | Таймер і вибір поточної задачі |
+| `/tasks` | Список задач, пошук і фільтри |
+| `/tasks/:id` | Деталі конкретної задачі |
+| `/stats` | Статистика сесій |
+| `/settings` | Налаштування таймера |
+
+Будь-який невідомий маршрут відкриває сторінку 404.
+
+## Збереження даних
+
+Застосунок зберігає дані у `localStorage` браузера:
+
+- `settings` — налаштування таймера;
+- `tasks` — задачі;
+- `sessions` — статистика робочих сесій;
+- `timer` — стан таймера для відновлення після оновлення сторінки.
+
+Очистити статистику можна кнопкою внизу сторінки `/stats`. Повне скидання
+задач, налаштувань, сесій і таймера доступне на сторінці `/settings`.
