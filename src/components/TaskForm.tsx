@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { validate } from "../lib/utils";
+import { useLanguage } from "../context/LanguageContext";
 
 type TaskFormProps = {
   onAdd: (title: string, estimate: number) => void;
 };
 
 export function TaskForm({ onAdd }: TaskFormProps) {
+  const { t, language } = useLanguage();
   const [title, setTitle] = useState("");
   const [estimate, setEstimate] = useState("");
   const [errors, setErrors] = useState<{ title?: string; estimate?: string }>(
@@ -15,7 +17,7 @@ export function TaskForm({ onAdd }: TaskFormProps) {
   const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
 
-    const validationErrors = validate(title, estimate);
+    const validationErrors = validate(title, estimate, language);
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length > 0) {
@@ -39,9 +41,9 @@ export function TaskForm({ onAdd }: TaskFormProps) {
     >
       <div className="card-body p-4 p-md-5">
         <div className="mb-4">
-          <h2 className="h4 fw-bold mb-2">Додати нову задачу</h2>
+          <h2 className="h4 fw-bold mb-2">{t("addTask")}</h2>
           <p className="text-secondary mb-0">
-            Запиши, що потрібно зробити, і оціни кількість помідорів.
+            {t("taskDescription")}
           </p>
         </div>
 
@@ -51,7 +53,7 @@ export function TaskForm({ onAdd }: TaskFormProps) {
       >
         <div>
           <label htmlFor="task-title" className="form-label fw-semibold">
-            Назва задачі
+            {t("taskTitle")}
           </label>
           <input
             id="task-title"
@@ -61,7 +63,7 @@ export function TaskForm({ onAdd }: TaskFormProps) {
             className={`form-control form-control-lg ${
               errors.title ? "is-invalid" : ""
             }`}
-            placeholder="Наприклад, підготувати презентацію"
+            placeholder={t("taskTitlePlaceholder")}
           />
           {errors.title && (
             <div className="invalid-feedback">{errors.title}</div>
@@ -70,7 +72,7 @@ export function TaskForm({ onAdd }: TaskFormProps) {
 
         <div>
           <label htmlFor="task-estimate" className="form-label fw-semibold">
-            Оцінка в помідорах
+            {t("taskEstimate")}
           </label>
           <input
             id="task-estimate"
@@ -82,7 +84,7 @@ export function TaskForm({ onAdd }: TaskFormProps) {
             className={`form-control form-control-lg ${
               errors.estimate ? "is-invalid" : ""
             }`}
-            placeholder="Від 1 до 20"
+            placeholder={t("estimatePlaceholder")}
           />
           {errors.estimate && (
             <div className="invalid-feedback">{errors.estimate}</div>
@@ -90,7 +92,7 @@ export function TaskForm({ onAdd }: TaskFormProps) {
         </div>
 
         <button className="btn btn-primary btn-lg rounded-pill mt-2" type="submit">
-          Додати задачу
+          {t("addTaskButton")}
         </button>
       </form>
       </div>

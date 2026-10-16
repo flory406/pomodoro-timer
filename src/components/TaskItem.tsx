@@ -1,5 +1,6 @@
 import type { Task } from "../types";
 import { Link } from "react-router-dom";
+import { useLanguage } from "../context/LanguageContext";
 
 type TasksProps = {
   task: Task;
@@ -8,6 +9,7 @@ type TasksProps = {
 };
 
 export function TaskItem({ task, onToggle, onDelete }: TasksProps) {
+  const { t } = useLanguage();
   const percentage = Math.min(
     100,
     (task.donePomodoros / task.estimatePomodoros) * 100,
@@ -37,16 +39,16 @@ export function TaskItem({ task, onToggle, onDelete }: TasksProps) {
             checked={task.isDone}
             onChange={() => onToggle(task.id)}
             className="form-check-input"
-            aria-label={`Позначити задачу "${task.title}" як виконану`}
+            aria-label={`${t("markTask")} "${task.title}"`}
           />
         </div>
       </div>
 
       <div className="d-flex flex-column gap-3 mt-4 h-100">
         <div className="d-flex justify-content-between align-items-center">
-          <span className="text-secondary">Прогрес</span>
+          <span className="text-secondary">{t("progress")}</span>
           <span className="fw-semibold">
-            {task.donePomodoros} з {task.estimatePomodoros}
+            {task.donePomodoros} {t("of")} {task.estimatePomodoros}
           </span>
         </div>
 
@@ -62,7 +64,7 @@ export function TaskItem({ task, onToggle, onDelete }: TasksProps) {
             className="btn btn-outline-danger w-100"
             onClick={() => onDelete(task.id)}
           >
-            Видалити
+            {t("delete")}
           </button>
         </div>
       </div>

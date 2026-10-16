@@ -2,8 +2,10 @@ import { useApp } from "../context/AppContext";
 
 import { TimerControls } from "../components/TimerControls";
 import { TimerDisplay } from "../components/TimerDisplay";
+import { useLanguage } from "../context/LanguageContext";
 
 export function TimerPage() {
+  const { t } = useLanguage();
   const {
     remainingMs,
     startTimer,
@@ -38,7 +40,7 @@ export function TimerPage() {
         <div className="card-body">
           <div className="mb-4">
             <div className="d-flex justify-content-center align-items-center">
-              <h3 className="text-primary p-2">Поточна задача</h3>
+              <h3 className="text-primary p-2">{t("currentTask")}</h3>
             </div>
 
             <select
@@ -52,7 +54,7 @@ export function TimerPage() {
               }
               disabled={timer.status === "running" && timer.phase === "Work"}
             >
-              <option value="">Без задачі</option>
+              <option value="">{t("noTask")}</option>
 
               {activeTasks.map((task) => (
                 <option key={task.id} value={task.id}>

@@ -1,18 +1,26 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useEffect } from "react";
 import { useApp } from "../context/AppContext";
-import { formatTime, getPhaseName } from "../lib/utils";
+import { formatTime } from "../lib/utils";
+import { useLanguage } from "../context/LanguageContext";
 
 export function Layout() {
   const { remainingMs, timer, notice, setNotice } = useApp();
+  const { t, toggleLanguage, language } = useLanguage();
 
   useEffect(() => {
     if (timer.status !== "idle") {
-      document.title = `${formatTime(remainingMs)} -- ${getPhaseName(timer.phase)}`;
+      document.title = `${formatTime(remainingMs)} -- ${t(
+        timer.phase === "Work"
+          ? "work"
+          : timer.phase === "Short Break"
+            ? "shortBreak"
+            : "longBreak",
+      )}`;
     } else if (timer.status === "idle") {
-      document.title = "Помодоро";
+      document.title = "Pomodoro";
     }
-  }, [remainingMs, timer.phase, timer.status]);
+  }, [remainingMs, timer.phase, timer.status, t]);
 
   useEffect(() => {
     if (notice === null) {
@@ -38,7 +46,7 @@ export function Layout() {
               : "app-nav-link"
           }
         >
-          Timer
+          {t("timer")}
         </NavLink>
 
         <NavLink
@@ -49,7 +57,7 @@ export function Layout() {
               : "app-nav-link"
           }
         >
-          Tasks
+          {t("tasks")}
         </NavLink>
 
         <NavLink
@@ -60,7 +68,7 @@ export function Layout() {
               : "app-nav-link"
           }
         >
-          Stats
+          {t("stats")}
         </NavLink>
 
         <NavLink
@@ -71,8 +79,16 @@ export function Layout() {
               : "app-nav-link"
           }
         >
-          Settings
+          {t("settings")}
         </NavLink>
+        <button
+          type="button"
+          className="app-nav-link app-language-toggle"
+          onClick={toggleLanguage}
+          aria-label={`Switch language (${language})`}
+        >
+          {language === "uk" ? "EN" : "UA"}
+        </button>
       </nav>
 
       {notice !== null && (

@@ -3,8 +3,10 @@ import { useApp } from "../context/AppContext";
 import type { Settings } from "../types";
 import { validateSettings } from "../lib/utils";
 import { ConfirmDialog } from "../components/ConfirmDialog";
+import { useLanguage } from "../context/LanguageContext";
 
 export function SettingsPage() {
+  const { t, language } = useLanguage();
   const { settings, setSettings } = useApp();
   const [draft, setDraft] = useState<Settings>(() => ({ ...settings }));
 
@@ -39,7 +41,7 @@ export function SettingsPage() {
   };
 
   const handleSave = () => {
-    const validationErrors = validateSettings(draft);
+    const validationErrors = validateSettings(draft, language);
 
     setErrors(validationErrors);
     setSaved(false);
@@ -63,11 +65,11 @@ export function SettingsPage() {
   return (
     <div className="container py-5">
       <div className="card shadow-lg border-0 rounded-4 p-4">
-        <h1 className="mb-4">Налаштування</h1>
+        <h1 className="mb-4">{t("settings")}</h1>
 
         <div className="mb-3">
           <label htmlFor="focusMin" className="form-label">
-            Робоча фаза, хвилини
+            {t("workPhase")}
           </label>
 
           <input
@@ -88,7 +90,7 @@ export function SettingsPage() {
 
         <div className="mb-3">
           <label htmlFor="shortBreakMin" className="form-label">
-            Коротка перерва, хвилини
+            {t("shortBreakMinutes")}
           </label>
 
           <input
@@ -109,7 +111,7 @@ export function SettingsPage() {
 
         <div className="mb-3">
           <label htmlFor="longBreakMin" className="form-label">
-            Довга перерва, хвилини
+            {t("longBreakMinutes")}
           </label>
 
           <input
@@ -130,7 +132,7 @@ export function SettingsPage() {
 
         <div className="mb-3">
           <label htmlFor="cyclesBeforeLongBreak" className="form-label">
-            Цикл перед перервою
+            {t("cyclesBeforeBreak")}
           </label>
 
           <input
@@ -169,13 +171,13 @@ export function SettingsPage() {
           />
 
           <label htmlFor="autoStartNext" className="form-check-label">
-            Автоматично запускати наступну фазу
+            {t("autoStart")}
           </label>
         </div>
 
         {saved && (
           <div className="alert alert-success mt-3" role="alert">
-            Збережено
+            {t("saved")}
           </div>
         )}
         <div className="d-flex justify-content-center align-items-center mt-3">
@@ -185,7 +187,7 @@ export function SettingsPage() {
             onClick={handleSave}
             style={{ width: "200px" }}
           >
-            Зберегти
+            {t("save")}
           </button>
         </div>
 
@@ -195,17 +197,17 @@ export function SettingsPage() {
             className="btn btn-outline-danger mt-3"
             onClick={() => setShowReset(true)}
           >
-            Скинути дані
+            {t("resetData")}
           </button>
         </div>
       </div>
 
       <ConfirmDialog
         open={showReset}
-        message="Усі задачі, сесії й налаштування буде скинуто до початкових. Продовжити?"
+        message={t("resetDataQuestion")}
         onCancel={() => setShowReset(false)}
         onConfirm={handleReset}
-        confirmText="Підтвердити"
+        confirmText={t("confirm")}
       />
     </div>
   );

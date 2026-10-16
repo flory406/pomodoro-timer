@@ -1,4 +1,5 @@
 import type { TimerStatus } from "../types";
+import { useLanguage } from "../context/LanguageContext";
 
 type TimerControlsProps = {
   status: TimerStatus;
@@ -15,12 +16,13 @@ export function TimerControls({
   onReset,
   onSkip,
 }: TimerControlsProps) {
+  const { t } = useLanguage();
   const buttonText =
     status === "running"
-      ? "Пауза"
+      ? t("pause")
       : status === "paused"
-        ? "Продовжити"
-        : "Старт";
+        ? t("resume")
+        : t("start");
 
   const buttonAction = status === "running" ? onPause : onStart;
 
@@ -31,11 +33,11 @@ export function TimerControls({
       </button>
 
       <button className="btn btn-outline-secondary rounded-pill px-4" onClick={onReset}>
-        Скинути
+        {t("reset")}
       </button>
 
       <button className="btn btn-outline-danger rounded-pill px-4" onClick={onSkip}>
-        Пропустити фазу
+        {t("skipPhase")}
       </button>
     </div>
   );

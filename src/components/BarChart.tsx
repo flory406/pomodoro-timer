@@ -9,6 +9,7 @@ type BarChartProps = {
 };
 
 export function BarChart({ items, compactLabels = false }: BarChartProps) {
+  const { t } = useLanguage();
   const maxValue = Math.max(...items.map((item) => item.value), 0);
 
   return (
@@ -29,7 +30,7 @@ export function BarChart({ items, compactLabels = false }: BarChartProps) {
             <div
               className="bg-primary rounded-top w-100"
               style={{ height: `${height}%`, minHeight: height > 0 ? "4px" : 0 }}
-              title={`${Math.round(item.value / 60)} хв`}
+              title={`${Math.round(item.value / 60)} ${t("minutes")}`}
             />
             <small className="text-secondary mt-2 text-nowrap">
               {showLabel ? item.label : ""}
@@ -40,3 +41,4 @@ export function BarChart({ items, compactLabels = false }: BarChartProps) {
     </div>
   );
 }
+import { useLanguage } from "../context/LanguageContext";

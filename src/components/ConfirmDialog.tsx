@@ -11,8 +11,11 @@ export function ConfirmDialog({
   message,
   onConfirm,
   onCancel,
-  confirmText = "Видалити",
+  confirmText,
 }: ConfirmDialogProps) {
+  const { t } = useLanguage();
+  const actionText = confirmText ?? t("delete");
+
   if (open === false) {
     return null;
   }
@@ -28,11 +31,11 @@ export function ConfirmDialog({
 
           <div className="modal-footer">
             <button onClick={onCancel} className="btn btn-secondary">
-              Скасувати
+              {t("cancel")}
             </button>
 
             <button onClick={onConfirm} className="btn btn-outline-danger">
-              {confirmText}
+              {actionText}
             </button>
           </div>
         </div>
@@ -40,3 +43,4 @@ export function ConfirmDialog({
     </div>
   );
 }
+import { useLanguage } from "../context/LanguageContext";

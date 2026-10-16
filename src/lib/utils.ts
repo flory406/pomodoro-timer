@@ -1,4 +1,5 @@
 import type { Phase, Session, Settings, TimerState } from "../types";
+import type { Language } from "../context/LanguageContext";
 
 type TaskFormErrors = {
   title?: string;
@@ -116,14 +117,17 @@ export function restoreTimer(
   }
 }
 
-export function validate(title: string, estimate: string) {
+export function validate(title: string, estimate: string, language: Language = "uk") {
   const errors: TaskFormErrors = {};
 
   const trimmedTitle = title.trim();
   const estimateNumber = Number(estimate);
 
   if (trimmedTitle.length < 2 || trimmedTitle.length > 80) {
-    errors.title = "Назва має містити від 2 до 80 символів";
+    errors.title =
+      language === "uk"
+        ? "Назва має містити від 2 до 80 символів"
+        : "The name must contain 2 to 80 characters";
   }
 
   if (
@@ -131,13 +135,16 @@ export function validate(title: string, estimate: string) {
     estimateNumber < 1 ||
     estimateNumber > 20
   ) {
-    errors.estimate = "Оцінка має бути цілим числом від 1 до 20";
+    errors.estimate =
+      language === "uk"
+        ? "Оцінка має бути цілим числом від 1 до 20"
+        : "The estimate must be an integer from 1 to 20";
   }
 
   return errors;
 }
 
-export function validateSettings(settings: Settings) {
+export function validateSettings(settings: Settings, language: Language = "uk") {
   const errors: SettingsErrors = {};
 
   if (
@@ -145,7 +152,10 @@ export function validateSettings(settings: Settings) {
     settings.focusMin < 1 ||
     settings.focusMin > 120
   ) {
-    errors.focusMin = "Робоча фаза має бути цілим числом від 1 до 120";
+    errors.focusMin =
+      language === "uk"
+        ? "Робоча фаза має бути цілим числом від 1 до 120"
+        : "The work phase must be an integer from 1 to 120";
   }
 
   if (
@@ -153,7 +163,10 @@ export function validateSettings(settings: Settings) {
     settings.shortBreakMin < 1 ||
     settings.shortBreakMin > 60
   ) {
-    errors.shortBreakMin = "Коротка перерва має бути цілим числом від 1 до 60";
+    errors.shortBreakMin =
+      language === "uk"
+        ? "Коротка перерва має бути цілим числом від 1 до 60"
+        : "The short break must be an integer from 1 to 60";
   }
 
   if (
@@ -161,7 +174,10 @@ export function validateSettings(settings: Settings) {
     settings.longBreakMin < 1 ||
     settings.longBreakMin > 60
   ) {
-    errors.longBreakMin = "Довга перерва має бути цілим числом від 1 до 60";
+    errors.longBreakMin =
+      language === "uk"
+        ? "Довга перерва має бути цілим числом від 1 до 60"
+        : "The long break must be an integer from 1 to 60";
   }
 
   if (
@@ -170,7 +186,9 @@ export function validateSettings(settings: Settings) {
     settings.cyclesBeforeLongBreak > 8
   ) {
     errors.cyclesBeforeLongBreak =
-      "Кількість циклів має бути цілим числом від 2 до 8";
+      language === "uk"
+        ? "Кількість циклів має бути цілим числом від 2 до 8"
+        : "The number of cycles must be an integer from 2 to 8";
   }
 
   return errors;

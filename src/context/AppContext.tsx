@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { ReactNode } from "react";
+import { useLanguage } from "./LanguageContext";
 
 import type { Settings, Task, Session, TimerState } from "../types";
 import {
@@ -13,7 +14,6 @@ import {
 import {
   getPhaseMs,
   getNextPhase,
-  getPhaseName,
   restoreTimer,
 } from "../lib/utils";
 
@@ -52,6 +52,7 @@ interface AppProviderProp {
 }
 
 function AppProvider({ children }: AppProviderProp) {
+  const { t } = useLanguage();
   const [settings, setSettings] = useState(() => loadSettings());
   const [tasks, setTasks] = useState(() => loadTasks());
   const [sessions, setSessions] = useState(() => loadSessions());
@@ -214,7 +215,15 @@ function AppProvider({ children }: AppProviderProp) {
 
   function finishPhase() {
     const finishedAt = new Date();
-    setNotice(`Фазу «${getPhaseName(timer.phase)}» завершено`);
+    setNotice(
+      t("phaseFinished", { phase: t(
+        timer.phase === "Work"
+          ? "work"
+          : timer.phase === "Short Break"
+            ? "shortBreak"
+            : "longBreak",
+      ) }),
+    );
 
     if (timer.phase === "Work") {
       const currentTask = tasks.find((task) => task.id === currentTaskId);

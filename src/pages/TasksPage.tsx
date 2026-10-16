@@ -6,8 +6,10 @@ import { EmptyState } from "../components/EmptyState";
 
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useLanguage } from "../context/LanguageContext";
 
 export function TasksPage() {
+  const { t } = useLanguage();
   const { tasks, addTask, toggleTask, removeTask } = useApp();
 
   const [deleteTask, setDeleteTask] = useState<number | null>(null);
@@ -43,8 +45,8 @@ export function TasksPage() {
       <TaskForm onAdd={(title, estimate) => addTask(title, estimate)} />
 
       <div className="d-flex justify-content-center align-items-center flex-column mt-5">
-        <h1 className="fw-bold mb-1">Мої задачі</h1>
-        <p className="text-secondary mb-0">Задач: {tasks.length}</p>
+        <h1 className="fw-bold mb-1">{t("myTasks")}</h1>
+        <p className="text-secondary mb-0">{t("taskCount")}: {tasks.length}</p>
       </div>
 
       <div className="d-flex justify-content-center align-items-center gap-3 mt-3">
@@ -54,7 +56,7 @@ export function TasksPage() {
           }
           onClick={() => setSearchParams({})}
         >
-          Усі
+          {t("all")}
         </button>
 
         <button
@@ -65,7 +67,7 @@ export function TasksPage() {
           }
           onClick={() => setSearchParams({ done: "false" })}
         >
-          Активні
+          {t("active")}
         </button>
 
         <button
@@ -76,14 +78,14 @@ export function TasksPage() {
           }
           onClick={() => setSearchParams({ done: "true" })}
         >
-          Виконані
+          {t("completed")}
         </button>
       </div>
 
       <div>
         <ConfirmDialog
           open={deleteTask !== null}
-          message="Точно видалити цю задачу?"
+          message={t("deleteTaskQuestion")}
           onCancel={() => setDeleteTask(null)}
           onConfirm={handleConfirmDelete}
         />
@@ -92,14 +94,14 @@ export function TasksPage() {
       <div className="row g-4 w-100">
         {tasks.length === 0 ? (
           <EmptyState
-            title="Немає задач"
-            hint="Додай першу задачу у формі вище"
+            title={t("noTasks")}
+            hint={t("addFirstTask")}
           />
         ) : filteredTasks.length === 0 ? (
           <EmptyState
-            title="За цим фільтром нічого немає"
-            hint="Спробуй вибрати інший фільтр"
-            buttonText="Скинути фільтр"
+            title={t("noFilterItems")}
+            hint={t("tryAnotherFilter")}
+            buttonText={t("clearFilter")}
             onClick={() => setSearchParams({})}
           />
         ) : (

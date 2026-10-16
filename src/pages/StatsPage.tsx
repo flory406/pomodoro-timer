@@ -4,6 +4,7 @@ import { BarChart } from "../components/BarChart";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { EmptyState } from "../components/EmptyState";
 import { useApp } from "../context/AppContext";
+import { useLanguage } from "../context/LanguageContext";
 import {
   formatDuration,
   dayKey,
@@ -13,6 +14,7 @@ import {
 } from "../lib/utils";
 
 export function StatsPage() {
+  const { t } = useLanguage();
   const { sessions } = useApp();
   const [showClear, setShowClear] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -35,8 +37,8 @@ export function StatsPage() {
     return (
       <div className="container py-5">
         <EmptyState
-          title="Статистика порожня"
-          hint="Завершені робочі сесії за цей період з'являться тут"
+          title={t("emptyStats")}
+          hint={t("emptyStatsHint")}
         />
       </div>
     );
@@ -52,16 +54,16 @@ export function StatsPage() {
   return (
     <div className="container py-5">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="mb-0">Статистика</h1>
+        <h1 className="mb-0">{t("stats")}</h1>
 
-        <div className="btn-group" role="group" aria-label="Період статистики">
+        <div className="btn-group" role="group" aria-label={t("stats")}>
           <button
             className={
               !isMonth ? "btn btn-primary" : "btn btn-outline-primary"
             }
             onClick={() => setSearchParams({ range: "week" })}
           >
-            Тиждень
+            {t("week")}
           </button>
           <button
             className={
@@ -69,7 +71,7 @@ export function StatsPage() {
             }
             onClick={() => setSearchParams({ range: "month" })}
           >
-            Місяць
+            {t("month")}
           </button>
         </div>
       </div>
@@ -78,7 +80,7 @@ export function StatsPage() {
         <div className="col-6">
           <div className="card border-0 shadow-sm h-100">
             <div className="card-body">
-              <p className="text-secondary mb-2">Завершено сесій</p>
+              <p className="text-secondary mb-2">{t("completedSessions")}</p>
               <h2 className="mb-0">{periodSessions.length}</h2>
             </div>
           </div>
@@ -86,7 +88,7 @@ export function StatsPage() {
         <div className="col-6">
           <div className="card border-0 shadow-sm h-100">
             <div className="card-body">
-              <p className="text-secondary mb-2">Загальний час</p>
+              <p className="text-secondary mb-2">{t("totalTime")}</p>
               <h2 className="mb-0">{formatDuration(totalSeconds)}</h2>
             </div>
           </div>
@@ -95,7 +97,7 @@ export function StatsPage() {
 
       <div className="card border-0 shadow-sm mb-4">
         <div className="card-body">
-          <h2 className="h4 mb-4">Час по днях</h2>
+          <h2 className="h4 mb-4">{t("timeByDay")}</h2>
           <BarChart
             items={secondsByDay.map(({ day, sec }) => ({
               label: isMonth ? day.slice(8) : day.slice(5),
@@ -108,7 +110,7 @@ export function StatsPage() {
 
       <div className="card border-0 shadow-sm">
         <div className="card-body">
-          <h2 className="h4 mb-3">Топ задач</h2>
+          <h2 className="h4 mb-3">{t("topTasks")}</h2>
           <div className="list-group">
             {topTasks.map((task) => (
               <div
@@ -131,16 +133,16 @@ export function StatsPage() {
           className="btn btn-outline-danger btn-sm"
           onClick={() => setShowClear(true)}
         >
-          Очистити статистику
+          {t("clearStats")}
         </button>
       </div>
 
       <ConfirmDialog
         open={showClear}
-        message="Усю статистику буде видалено. Продовжити?"
+        message={t("clearStatsQuestion")}
         onCancel={() => setShowClear(false)}
         onConfirm={clearStatistics}
-        confirmText="Очистити"
+        confirmText={t("clear")}
       />
     </div>
   );
