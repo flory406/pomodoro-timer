@@ -1,20 +1,102 @@
 # Pomodoro Timer
 
-Вебзастосунок Pomodoro Timer на React і TypeScript для планування робочих
-сесій, перерв та відстеження статистики.
+A React and TypeScript web application for planning focused work sessions,
+breaks, tasks, and productivity statistics.
+
+## Features
+
+- work, short-break, and long-break timer phases;
+- automatic transition to the next phase;
+- configurable phase durations and cycle count;
+- task creation, completion tracking, and deletion;
+- current-task selection for work sessions;
+- tasks, settings, timer state, and sessions saved in `localStorage`;
+- weekly and monthly statistics;
+- daily time chart and top tasks;
+- statistics reset with confirmation;
+- Ukrainian and English interface;
+- light and dark themes with a coordinated blue-violet palette;
+- task details page and custom 404 page;
+- responsive Bootstrap interface.
+
+## Technologies
+
+- React 19
+- TypeScript
+- Vite
+- React Router
+- Bootstrap 5
+
+## Local Development
+
+Node.js and npm are required.
+
+```bash
+npm install
+npm run dev
+```
+
+Open the address shown by Vite, usually:
+
+```text
+http://localhost:5173
+```
+
+## Available Commands
+
+```bash
+npm run dev      # start the development server
+npm run build    # run TypeScript checks and create a production build
+npm run lint     # run ESLint
+npm run preview  # preview the production build
+```
+
+## Main Pages
+
+| URL | Description |
+| --- | --- |
+| `/` | Timer and current-task selection |
+| `/tasks` | Task list, search, and filters |
+| `/tasks/:id` | Details for a specific task |
+| `/stats` | Session statistics |
+| `/settings` | Timer settings |
+
+Any unknown route opens the custom 404 page.
+
+## Data Storage
+
+The application stores data in the browser's `localStorage`:
+
+- `settings` — timer settings;
+- `tasks` — tasks;
+- `sessions` — work-session statistics;
+- `timer` — timer state used to restore the timer after a page refresh;
+- `language` — selected interface language;
+- `theme` — selected light or dark theme.
+
+Statistics can be cleared using the button at the bottom of `/stats`.
+Tasks, settings, sessions, and timer state can all be reset from `/settings`.
+
+---
+
+# Помодоро Таймер
+
+Вебзастосунок на React і TypeScript для планування робочих сесій, перерв,
+задач і відстеження продуктивності.
 
 ## Можливості
 
 - таймер робочої фази, короткої та довгої перерви;
 - автоматичний перехід до наступної фази;
 - налаштування тривалості фаз і кількості циклів;
-- створення, редагування статусу та видалення задач;
+- створення задач, відстеження виконання та видалення;
 - вибір поточної задачі для робочої сесії;
 - збереження задач, налаштувань, таймера та сесій у `localStorage`;
-- статистика за тиждень або місяць;
+- статистика за тиждень і місяць;
 - графік часу по днях і топ задач;
 - очищення статистики з підтвердженням;
-- перемикання інтерфейсу між українською та англійською;
+- український та англійський інтерфейс;
+- світла й темна теми з узгодженою синьо-фіолетовою палітрою;
 - сторінка деталей задачі та власна сторінка 404;
 - адаптивний інтерфейс на Bootstrap.
 
@@ -26,7 +108,7 @@
 - React Router
 - Bootstrap 5
 
-## Запуск локально
+## Локальний запуск
 
 Потрібен Node.js та npm.
 
@@ -60,16 +142,19 @@ npm run preview  # перегляд production-збірки
 | `/stats` | Статистика сесій |
 | `/settings` | Налаштування таймера |
 
-Будь-який невідомий маршрут відкриває сторінку 404.
+Будь-який невідомий маршрут відкриває власну сторінку 404.
 
 ## Збереження даних
 
-Застосунок зберігає дані у `localStorage` браузера:
+Застосунок зберігає дані в `localStorage` браузера:
 
 - `settings` — налаштування таймера;
 - `tasks` — задачі;
 - `sessions` — статистика робочих сесій;
-- `timer` — стан таймера для відновлення після оновлення сторінки.
+- `timer` — стан таймера для відновлення після оновлення сторінки;
+- `language` — вибрана мова інтерфейсу;
+- `theme` — вибрана світла або темна тема.
 
-Очистити статистику можна кнопкою внизу сторінки `/stats`. Повне скидання
-задач, налаштувань, сесій і таймера доступне на сторінці `/settings`.
+Статистику можна очистити кнопкою внизу сторінки `/stats`.
+Повністю скинути задачі, налаштування, сесії та таймер можна на сторінці
+`/settings`.
