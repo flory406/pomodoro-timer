@@ -4,7 +4,33 @@ body,
   min-height: 100%;
 }
 
+:root {
+  --bs-body-bg: #f7f8ff;
+  --bs-body-bg-rgb: 247, 248, 255;
+  --bs-body-color: #26324a;
+  --bs-body-color-rgb: 38, 50, 74;
+  --bs-secondary-color: #64708a;
+  --bs-secondary-color-rgb: 100, 112, 138;
+  --app-surface: rgba(255, 255, 255, 0.78);
+  --app-border: rgba(93, 111, 161, 0.16);
+  --app-shadow: rgba(58, 76, 135, 0.16);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bs-body-bg: #202a40;
+  --bs-body-bg-rgb: 32, 42, 64;
+  --bs-body-color: #e2e8f5;
+  --bs-body-color-rgb: 226, 232, 245;
+  --bs-secondary-color: #aab7d0;
+  --bs-secondary-color-rgb: 170, 183, 208;
+  --app-surface: rgba(39, 51, 77, 0.9);
+  --app-border: rgba(163, 180, 219, 0.18);
+  --app-shadow: rgba(8, 15, 32, 0.32);
+}
+
 body {
+  color: var(--bs-body-color);
   background:
     radial-gradient(
       circle at 30% 42%,
@@ -20,10 +46,17 @@ body {
   background-attachment: fixed;
 }
 
+:root[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at 30% 42%, rgba(52, 116, 218, 0.25), transparent 24rem),
+    radial-gradient(circle at 72% 45%, rgba(139, 92, 246, 0.2), transparent 25rem),
+    linear-gradient(135deg, #182238 0%, #222b43 52%, #1b2943 100%);
+}
+
 .app-nav {
-  background: rgba(var(--bs-body-bg-rgb), 0.42);
-  border: 1px solid rgba(var(--bs-secondary-rgb), 0.12);
-  box-shadow: 0 0.35rem 1rem rgba(0, 0, 0, 0.05);
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  box-shadow: 0 0.35rem 1rem var(--app-shadow);
   backdrop-filter: blur(12px);
 }
 
@@ -47,6 +80,39 @@ body {
   background-color: rgba(var(--bs-primary-rgb), 0.12);
   color: var(--bs-primary);
   font-weight: 600;
+}
+
+.app-theme-toggle {
+  font-size: 1.15rem;
+  line-height: 1;
+  padding-inline: 0.7rem;
+}
+
+.card,
+.list-group-item,
+.modal-content {
+  background-color: var(--app-surface);
+  color: var(--bs-body-color);
+  border-color: var(--app-border);
+}
+
+.form-control,
+.form-select {
+  background-color: rgba(var(--bs-body-bg-rgb), 0.6);
+  border-color: var(--app-border);
+  color: var(--bs-body-color);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: rgba(var(--bs-body-bg-rgb), 0.8);
+  color: var(--bs-body-color);
+}
+
+.not-found-card {
+  background: var(--app-surface);
+  border-color: var(--app-border);
+  box-shadow: 0 1.5rem 4rem var(--app-shadow);
 }
 
 .app-hover-card {

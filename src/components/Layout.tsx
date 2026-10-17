@@ -3,10 +3,12 @@ import { useEffect } from "react";
 import { useApp } from "../context/AppContext";
 import { formatTime } from "../lib/utils";
 import { useLanguage } from "../context/LanguageContext";
+import { useTheme } from "../context/ThemeContext";
 
 export function Layout() {
   const { remainingMs, timer, notice, setNotice } = useApp();
   const { t, toggleLanguage, language } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     if (timer.status !== "idle") {
@@ -88,6 +90,15 @@ export function Layout() {
           aria-label={`Switch language (${language})`}
         >
           {language === "uk" ? "EN" : "UA"}
+        </button>
+        <button
+          type="button"
+          className="app-nav-link app-theme-toggle"
+          onClick={toggleTheme}
+          aria-label={theme === "light" ? t("darkTheme") : t("lightTheme")}
+          title={theme === "light" ? t("darkTheme") : t("lightTheme")}
+        >
+          {theme === "light" ? "◐" : "☼"}
         </button>
       </nav>
 

@@ -10,29 +10,32 @@ import { TimerPage } from "./pages/TimerPage";
 
 import AppProvider from "./context/AppContext";
 import { LanguageProvider } from "./context/LanguageContext";
+import { ThemeProvider } from "./context/ThemeContext";
 
 function App() {
   return (
-    <LanguageProvider>
-      <AppProvider>
-        <BrowserRouter>
-          <div>
-            <Routes>
-              <Route element={<Layout />}>
-                <Route path="/" element={<TimerPage />} />
-                <Route path="/tasks" element={<TasksPage />} />
-                <Route path="/stats" element={<StatsPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/tasks/:id" element={<TaskDetailPage />} />
+    <ThemeProvider>
+      <LanguageProvider>
+        <AppProvider>
+          <BrowserRouter>
+            <div>
+              <Routes>
+                <Route element={<Layout />}>
+                  <Route path="/" element={<TimerPage />} />
+                  <Route path="/tasks" element={<TasksPage />} />
+                  <Route path="/stats" element={<StatsPage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                  <Route path="/tasks/:id" element={<TaskDetailPage />} />
 
-                <Route path="*" element={<NotFoundPage />} />
-                <Route path="/not-found" element={<NotFoundPage />} />
-              </Route>
-            </Routes>
-          </div>
-        </BrowserRouter>
-      </AppProvider>
-    </LanguageProvider>
+                  <Route path="*" element={<NotFoundPage />} />
+                  <Route path="/not-found" element={<NotFoundPage />} />
+                </Route>
+              </Routes>
+            </div>
+          </BrowserRouter>
+        </AppProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
 
